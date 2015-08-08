@@ -8,5 +8,7 @@
   "project_page": "http://docs.openstack.org/infra/system-config/",
   "issues_url": "https://storyboard.openstack.org/#!/project/819",
   "dependencies": [
+    { "name": "openstackinfra/httpd" },
+    { "name": "puppetlabs/vcsrepo" }
   ]
 }
