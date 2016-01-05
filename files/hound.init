@@ -26,7 +26,7 @@ start () {
     echo -n "Start $NAME"
     $SSD --start --pidfile $PID --make-pidfile -u $USER -g $GROUP \
         -d $HOUND_HOME --background \
-        --startas /bin/bash -- -c "exec $CMD_DIR/$CMD >$LOG_FILE 2>&1"
+        --startas /bin/bash -- -c "exec $CMD_DIR/$CMD >>$LOG_FILE 2>&1"
     RETVAL=$?
     echo
     return $RETVAL
