@@ -116,4 +116,24 @@ class hound (
     template => 'hound/hound.vhost.erb',
   }
 
+  file { '/var/log/hound.log':
+    owner   => 'hound',
+    group   => 'hound',
+    mode    => '0644',
+    require => User['hound'],
+  }
+
+  logrotate::file { 'houndlog':
+    ensure  => present,
+    log     => '/var/log/hound.log',
+    options => ['compress',
+      'copytruncate',
+      'delaycompress',
+      'missingok',
+      'rotate 7',
+      'daily',
+      'notifempty',
+    ],
+  }
+
 }
