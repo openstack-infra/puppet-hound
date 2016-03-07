@@ -7,6 +7,7 @@ class hound (
   $manage_config = true,
   $serveradmin   = "webmaster@${::fqdn}",
   $vhost_name    = $::fqdn,
+  $ulimit_max_open_files = 2048,
 ) {
 
   package { 'golang':
@@ -83,13 +84,13 @@ class hound (
   }
 
   file { '/etc/init.d/hound':
-    ensure => file,
-    owner  => root,
-    group  => root,
-    mode   => '0755',
-    source => 'puppet:///modules/hound/hound.init',
-    notify => Service['hound'],
-    before => Service['hound'],
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => '0755',
+    content => template('hound/hound.init.erb'),
+    notify  => Service['hound'],
+    before  => Service['hound'],
   }
 
   include ::httpd

@@ -24,6 +24,7 @@ PID=/var/run/${NAME}.pid
 
 start () {
     echo -n "Start $NAME"
+    ulimit -n <%= @ulimit_max_open_files %>
     $SSD --start --pidfile $PID --make-pidfile -u $USER -g $GROUP \
         -d $HOUND_HOME --background \
         --startas /bin/bash -- -c "exec $CMD_DIR/$CMD >>$LOG_FILE 2>&1"
