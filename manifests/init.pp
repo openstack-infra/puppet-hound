@@ -2,11 +2,11 @@
 #
 # == Class: hound
 class hound (
+  $config_json   = 'hound/config.json',
+  $datadir       = '/home/hound/data',
   $manage_config = true,
-  $config_json = 'hound/config.json',
-  $vhost_name = $::fqdn,
-  $datadir = '/home/hound/data',
-  $serveradmin = "webmaster@${::fqdn}",
+  $serveradmin   = "webmaster@${::fqdn}",
+  $vhost_name    = $::fqdn,
 ) {
 
   package { 'golang':
