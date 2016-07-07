@@ -6,6 +6,7 @@ class hound (
   $datadir       = '/home/hound/data',
   $manage_config = true,
   $serveradmin   = "webmaster@${::fqdn}",
+  $serveraliases = undef,
   $vhost_name    = $::fqdn,
 ) {
 
