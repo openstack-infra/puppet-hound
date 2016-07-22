@@ -1,5 +1,10 @@
 <VirtualHost *:80>
   ServerName <%= scope.lookupvar("hound::vhost_name") %>
+<% if @serveraliases.is_a? Array -%>
+<% @serveraliases.each do |name| %><%= "  ServerAlias #{name}\n" %><% end %>
+<% elsif @serveraliases -%>
+<%= "  ServerAlias #{@serveraliases}" %>
+<% end %>
   ServerAdmin <%= @serveradmin %>
 
   ErrorLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("hound::vhost_name") %>-error.log
