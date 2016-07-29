@@ -9,6 +9,7 @@ class hound (
   $serveraliases = undef,
   $vhost_name    = $::fqdn,
   $ulimit_max_open_files = 2048,
+  $git_source_uri = 'git://github.com/etsy/Hound.git',
 ) {
 
   package { 'golang':
@@ -56,7 +57,7 @@ class hound (
   vcsrepo { '/home/hound/src/github.com/etsy/hound':
     ensure   => latest,
     provider => git,
-    source   => 'git://github.com/etsy/Hound.git',
+    source   => $git_source_uri,
     notify   => Exec['build_hound'],
   }
 
