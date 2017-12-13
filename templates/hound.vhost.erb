@@ -13,9 +13,26 @@
 
   CustomLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("hound::vhost_name") %>-access.log combined
 
-  <IfModule mod_proxy.c>
-      RewriteEngine on
+  RewriteEngine on
 
+  DocumentRoot <%= @docroot %>
+  <Directory <%= @docroot %>>
+      AllowOverride None
+      Order allow,deny
+      allow from all
+      Require all granted
+      # Allow mod_rewrite rules
+      AllowOverride FileInfo
+  </Directory>
+
+  # Redirect to a 503 page if reindex.lock file exists
+  ErrorDocument 503 /503.html
+  RewriteRule ^/503\.html$ - [L]
+  RewriteCond %{ENV:REDIRECT_STATUS} !=503
+  RewriteCond "<%= @docroot %>/reindex.lock" -f
+  RewriteRule ^(.*)$ /$1 [R=503,L]
+
+  <IfModule mod_proxy.c>
       RewriteRule ^/(.*)$ http://localhost:6080/$1 [P]
       ProxyPassReverse / http://localhost:6080/
   </IfModule>

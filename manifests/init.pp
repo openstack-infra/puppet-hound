@@ -5,6 +5,7 @@ class hound (
   $config_json   = 'hound/config.json',
   $datadir       = '/home/hound/data',
   $manage_config = true,
+  $docroot       = '/var/www/hound',
   $serveradmin   = "webmaster@${::fqdn}",
   $serveraliases = undef,
   $vhost_name    = $::fqdn,
@@ -114,9 +115,25 @@ class hound (
 
   httpd::vhost { $vhost_name:
     port     => 80,
-    docroot  => 'MEANINGLESS ARGUMENT',
+    docroot  => $docroot,
     priority => '50',
     template => 'hound/hound.vhost.erb',
+    require  => File["${docroot}/503.html"],
+  }
+
+  file { $docroot:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755'
+  }
+
+  file { "${docroot}/503.html":
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template('hound/503.html.erb'),
   }
 
   file { '/var/log/hound.log':
