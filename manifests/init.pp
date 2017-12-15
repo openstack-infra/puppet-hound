@@ -5,13 +5,30 @@ class hound (
   $config_json   = 'hound/config.json',
   $datadir       = '/home/hound/data',
   $manage_config = true,
-  $docroot       = '/var/www/hound',
+  $www_base      = '/var/www/',
   $serveradmin   = "webmaster@${::fqdn}",
   $serveraliases = undef,
   $vhost_name    = $::fqdn,
   $ulimit_max_open_files = 2048,
   $git_source_uri = 'git://github.com/etsy/Hound.git',
 ) {
+
+  $docroot = "${www_base}/hound"
+
+  file { $www_base:
+    ensure => directory,
+    owner  => root,
+    group  => root,
+  }
+
+  file { $docroot:
+    ensure  => directory,
+    owner   => root,
+    group   => root,
+    require => [
+      File[$www_base],
+    ]
+  }
 
   package { 'golang':
     ensure => present,
@@ -98,17 +115,17 @@ class hound (
 
   include ::httpd
 
-  httpd_mod { 'rewrite':
+  httpd::mod { 'rewrite':
     ensure => present,
     before => Service['hound'],
   }
 
-  httpd_mod { 'proxy':
+  httpd::mod { 'proxy':
     ensure => present,
     before => Service['hound'],
   }
 
-  httpd_mod { 'proxy_http':
+  httpd::mod { 'proxy_http':
     ensure => present,
     before => Service['hound'],
   }
@@ -118,14 +135,7 @@ class hound (
     docroot  => $docroot,
     priority => '50',
     template => 'hound/hound.vhost.erb',
-    require  => File["${docroot}/503.html"],
-  }
-
-  file { $docroot:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755'
+    require  => File[$docroot],
   }
 
   file { "${docroot}/503.html":
@@ -134,6 +144,7 @@ class hound (
     group   => 'root',
     mode    => '0644',
     content => template('hound/503.html.erb'),
+    require => File[$docroot],
   }
 
   file { '/var/log/hound.log':
