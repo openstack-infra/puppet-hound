@@ -5,7 +5,7 @@
 <% elsif @serveraliases -%>
 <%= "  ServerAlias #{@serveraliases}" %>
 <% end %>
-  ServerAdmin <%= @serveradmin %>
+  ServerAdmin <%= scope.lookupvar("hound::serveradmin") %>
 
   ErrorLog ${APACHE_LOG_DIR}/<%= scope.lookupvar("hound::vhost_name") %>-error.log
 
