@@ -1,9 +1,0 @@
-{
-    "max-concurrent-indexers" : 2,
-    "dbpath" : "data",
-    "repos" : {
-        "hound" : {
-            "url" : "https://www.github.com/Etsy/hound.git"
-        }
-    }
-}
